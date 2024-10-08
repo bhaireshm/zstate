@@ -1,0 +1,15 @@
+{
+  "name": "@bhaireshm/zstate",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "nodemon src/test.ts"
+  },
+  "keywords": [],
+  "author": "Bhairesh M <bhairesh@arithaconsulting.com>",
+  "license": "ISC",
+  "dependencies": {
+    "xstate": "^5.18.2"
+  }
+}
