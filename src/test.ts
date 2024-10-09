@@ -1,26 +1,7 @@
-import createCRUDInterface from ".";
+import CRUDMachineClass from ".";
+import initialData from "./sample.json";
 
-interface MyData {
-  user: {
-    name: string;
-    age: number;
-  };
-  settings: {
-    theme: string;
-  };
-}
-
-const initialData: MyData = {
-  user: {
-    name: 'John Doe',
-    age: 30
-  },
-  settings: {
-    theme: 'light'
-  }
-};
-
-const crudMachine = createCRUDInterface<MyData>({
+const crudMachine = new CRUDMachineClass({
   initialData,
   enableVersioning: true,
   maxVersions: 5,
@@ -32,30 +13,31 @@ const crudMachine = createCRUDInterface<MyData>({
   }
 });
 
-console.log("start", crudMachine.getContextData());
+// console.log("start", crudMachine.getContextData());
 
 // Use CRUD operations
-crudMachine.create({ user: { name: 'Jane Doe' } });
-// const userData = crudMachine.read('user');
-crudMachine.update({ settings: { theme: 'dark' } });
-crudMachine.delete('user.age');
+crudMachine.create({ template: { name: 'new template' } });
+// crudMachine.create("newData", { template: { name: 'new template' } });
+// crudMachine.create("newData.template", { name: 'from nested' });
+// crudMachine.create("newData.newKey", 2);
+// crudMachine.update({ config: { theme: 'dark' } });
+// crudMachine.delete('user.age');
+// console.log("config", crudMachine.read('config'));
 
-console.log("settings", crudMachine.read('settings'));
+// // Undo/Redo
+// crudMachine.undo();
+// // crudMachine.redo();
 
-// Undo/Redo
-crudMachine.undo();
-// crudMachine.redo();
+// // Subscribe to changes
+// const unsubscribe = crudMachine.subscribe((state) => {
+//   console.log('New state:', state.context.data);
+// });
 
-// Subscribe to changes
-const unsubscribe = crudMachine.subscribe((state) => {
-  console.log('New state:', state.context.data);
-});
+// // Send custom events
+// crudMachine.send({ type: 'CUSTOM_ACTION', payload: { 1: 2 } });
 
-// Send custom events
-crudMachine.send({ type: 'CUSTOM_ACTION', payload: { 1: 2 } });
+// // Later, when you want to unsubscribe
+// unsubscribe();
 
-// Later, when you want to unsubscribe
-unsubscribe();
-
-console.log("end", crudMachine.getContextData());
-console.log("history", crudMachine.getVersionHistory());
+// console.log("end", crudMachine.getContextData());
+// console.log("history", crudMachine.getVersionHistory());
