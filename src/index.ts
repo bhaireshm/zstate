@@ -5,27 +5,30 @@ export type DeepPartial<T> = T extends object ? {
   [P in keyof T]?: DeepPartial<T[P]>;
 } : T;
 
-type CRUDEvent =
+export type CRUDEvent =
   | { type: 'CREATE'; data: any }
   | { type: 'READ'; path?: string }
   | { type: 'UPDATE'; data: any }
   | { type: 'DELETE'; path: string }
   | { type: 'UNDO' }
   | { type: 'REDO' }
-  | { type: string;[key: string]: any }; // Allow custom actions
+  | {
+    type: string;
+    [key: string]: any
+  };
 
-interface VersionedData<T> {
+export interface VersionedData<T> {
   data: T;
   timestamp: Date;
 }
 
-interface CRUDContext<T> {
+export interface CRUDContext<T> {
   data: T;
   versions: VersionedData<T>[];
   currentVersion: number;
 }
 
-interface CRUDOptions<T> {
+export interface CRUDOptions<T> {
   id?: string;
   initialData: T;
   enableVersioning?: boolean;
@@ -33,11 +36,11 @@ interface CRUDOptions<T> {
   transitions?: Record<string, (context: CRUDContext<T>, event: any) => Partial<CRUDContext<T>>>;
 }
 
-type CRUDMachine<T extends object> = ReturnType<typeof CRUDMachineClass.prototype.createGenericCRUDMachine>;
+type CRUDMachine<T extends object> = ReturnType<typeof CRUDMachineClass.prototype.createCRUDMachine>;
 type CRUDActor<T extends object> = ActorRefFrom<CRUDMachine<T>>;
 type CRUDState<T extends object> = StateFrom<CRUDMachine<T>>;
 
-interface CRUDMachineInterface<T extends object> {
+export interface CRUDMachineInterface<T extends object> {
   create(data: DeepPartial<T>): void;
   read(path?: string): any;
   update(data: DeepPartial<T>): void;
@@ -45,22 +48,21 @@ interface CRUDMachineInterface<T extends object> {
   undo(): void;
   redo(): void;
   subscribe(callback: (state: CRUDState<T>) => void): () => void;
-  getSnapshot(): CRUDState<T>;
   send(event: CRUDEvent): void;
   getContextData(): T;
   getVersionHistory(): VersionedData<T>[];
 }
 
-class CRUDMachineClass<T extends object> implements CRUDMachineInterface<T> {
+export default class CRUDMachineClass<T extends object> implements CRUDMachineInterface<T> {
   private readonly actor: CRUDActor<T>;
 
   constructor(options: CRUDOptions<T>) {
-    const machine = this.createGenericCRUDMachine(options);
+    const machine = this.createCRUDMachine(options);
     this.actor = createActor(machine);
     this.actor.start();
   }
 
-  createGenericCRUDMachine(options: CRUDOptions<T>) {
+  createCRUDMachine(options: CRUDOptions<T>) {
     const {
       id = 'genericCRUD',
       initialData,
@@ -69,13 +71,15 @@ class CRUDMachineClass<T extends object> implements CRUDMachineInterface<T> {
       transitions = {}
     } = options;
 
+    const latestVersion = { data: initialData, timestamp: new Date() };
+
     return createMachine(
       {
         id,
         initial: 'idle',
         context: {
           data: initialData,
-          versions: enableVersioning ? [{ data: initialData, timestamp: new Date() }] : [],
+          versions: enableVersioning ? [latestVersion] : [],
           currentVersion: 0
         },
         schemas: {
@@ -92,7 +96,7 @@ class CRUDMachineClass<T extends object> implements CRUDMachineInterface<T> {
               UNDO: { actions: 'undo', guard: 'canUndo' },
               REDO: { actions: 'redo', guard: 'canRedo' },
               ...Object.fromEntries(
-                Object.entries(transitions).map(([key, action]) => [key, { actions: key }])
+                Object.entries(transitions).map(([key]) => [key, { actions: key }])
               )
             }
           }
@@ -101,24 +105,17 @@ class CRUDMachineClass<T extends object> implements CRUDMachineInterface<T> {
       {
         actions: {
           create: assign(({ context, event }) => {
-            if (event.type !== 'CREATE') return context;
+            if (event.type !== 'CREATE' || !event.data) return context;
             const newData = deepMerge(context.data, event.data);
             return this.updateContextAndVersion(context, newData, enableVersioning, maxVersions);
           }),
-          read: assign(({ context, event }) => {
-            console.log("file: index.ts:108  context, event", context, event);
-            if (event.type !== 'READ') return context;
-            const path = event.path || '';
-            const value = getNestedValue(context.data, path);
-            return { ...context, data: value };
-          }),
           update: assign(({ context, event }) => {
-            if (event.type !== 'UPDATE') return context;
+            if (event.type !== 'UPDATE' || !event.data) return context;
             const updatedData = deepMerge(context.data, event.data);
             return this.updateContextAndVersion(context, updatedData, enableVersioning, maxVersions);
           }),
           delete: assign(({ context, event }) => {
-            if (event.type !== 'DELETE') return context;
+            if (event.type !== 'DELETE' || !event.path) return context;
             const updatedData = removeNestedProperty(context.data, event.path);
             return this.updateContextAndVersion(context, updatedData, enableVersioning, maxVersions);
           }),
@@ -170,19 +167,26 @@ class CRUDMachineClass<T extends object> implements CRUDMachineInterface<T> {
     return { ...context, data: newData };
   }
 
+  private getSnapshot() {
+    return this.actor.getSnapshot();
+  }
+
   create(data: DeepPartial<T>) {
+    if (!data) return;
     this.actor.send({ type: 'CREATE', data });
   }
 
   read(path?: string) {
-    this.actor.send({ type: 'READ', path });
+    return getNestedValue(this.getContextData(), path ?? "");
   }
 
   update(data: DeepPartial<T>) {
+    if (!data) return;
     this.actor.send({ type: 'UPDATE', data });
   }
 
   delete(path: string) {
+    if (!path) return;
     this.actor.send({ type: 'DELETE', path });
   }
 
@@ -199,21 +203,20 @@ class CRUDMachineClass<T extends object> implements CRUDMachineInterface<T> {
     return () => subscription.unsubscribe();
   }
 
-  getSnapshot() {
-    return this.actor.getSnapshot();
-  }
-
   send(event: CRUDEvent) {
+    if (!event || !event.type) return;
     this.actor.send(event);
   }
 
+  getContext() {
+    return this.getSnapshot().context;
+  }
+
   getContextData() {
-    return this.actor.getSnapshot().context.data;
+    return this.getSnapshot().context.data;
   }
 
   getVersionHistory() {
-    return this.actor.getSnapshot().context.versions;
+    return this.getSnapshot().context.versions;
   }
 }
-
-export default CRUDMachineClass;

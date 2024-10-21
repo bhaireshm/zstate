@@ -1,0 +1,197 @@
+{
+  "template": {
+    "id": "d89befd8a9d7183a79",
+    "name": "s3-resume",
+    "category": "project",
+    "description": ""
+  },
+  "pages": [
+    {
+      "pageName": "Home",
+      "pageData": [
+        {
+          "type": "grid",
+          "cols": [
+            {
+              "colspan": "12",
+              "style": {},
+              "colData": [
+                {
+                  "data": [
+                    {
+                      "id": "bg",
+                      "style": {
+                        "font": {
+                          "size": "",
+                          "color": "",
+                          "style": "",
+                          "family": "",
+                          "weight": ""
+                        },
+                        "width": "",
+                        "height": "230",
+                        "margin": "",
+                        "padding": "40 60 12 80",
+                        "backgroundColor": "#ff7512"
+                      },
+                      "content": {
+                        "for": "background",
+                        "src": "",
+                        "link": "",
+                        "type": "img",
+                        "label": "Background",
+                        "value": ""
+                      },
+                      "display": "block",
+                      "editable": true
+                    },
+                    {
+                      "id": "name",
+                      "style": {
+                        "font": {
+                          "size": "46px",
+                          "color": "",
+                          "style": "",
+                          "family": "",
+                          "weight": "600"
+                        },
+                        "margin": "",
+                        "padding": "",
+                        "backgroundColor": ""
+                      },
+                      "content": {
+                        "for": "name",
+                        "link": "",
+                        "type": "title",
+                        "label": "Name",
+                        "value": "Michael Smith"
+                      },
+                      "display": "block",
+                      "editable": true
+                    },
+                    {
+                      "id": "university",
+                      "style": {
+                        "font": {
+                          "size": "16px",
+                          "color": "",
+                          "style": "",
+                          "family": "",
+                          "weight": ""
+                        },
+                        "margin": "",
+                        "padding": "",
+                        "backgroundColor": ""
+                      },
+                      "content": {
+                        "for": "designation",
+                        "link": "",
+                        "type": "title",
+                        "label": "Designation",
+                        "value": "Business Analyst"
+                      },
+                      "display": "block",
+                      "editable": true
+                    },
+                    {
+                      "id": "profile-bg",
+                      "style": {
+                        "font": {
+                          "size": "",
+                          "color": "",
+                          "style": "",
+                          "family": "",
+                          "weight": ""
+                        },
+                        "width": "",
+                        "height": "",
+                        "margin": "-70 60 0 60",
+                        "padding": "20 20 20 20",
+                        "backgroundColor": "#ededed"
+                      },
+                      "content": {
+                        "for": "profile background",
+                        "src": "",
+                        "link": "",
+                        "type": "img",
+                        "label": "Profile Background",
+                        "value": ""
+                      },
+                      "display": "block",
+                      "editable": true
+                    },
+                    {
+                      "id": "title",
+                      "style": {
+                        "font": {
+                          "size": "20px",
+                          "color": "",
+                          "style": "",
+                          "family": "",
+                          "weight": "600"
+                        },
+                        "margin": "0 0 8 0",
+                        "padding": "",
+                        "backgroundColor": ""
+                      },
+                      "content": {
+                        "for": "title",
+                        "link": "",
+                        "type": "title",
+                        "label": "Title",
+                        "value": "Profile"
+                      },
+                      "display": "block",
+                      "editable": true
+                    },
+                    {
+                      "id": "desc",
+                      "style": {
+                        "font": {
+                          "size": "16px",
+                          "color": "",
+                          "style": "",
+                          "family": "",
+                          "weight": ""
+                        },
+                        "margin": "",
+                        "padding": "",
+                        "backgroundColor": ""
+                      },
+                      "content": {
+                        "for": "summary",
+                        "link": "",
+                        "type": "subtext",
+                        "label": "Summary",
+                        "value": "Dynamic and results-oriented Business Analyst with a strong foundation in business strategy, market research, and process improvement. Proven track record in driving business growth and operational efficiency across multiple industries. Adept at working collaboratively with cross-functional teams to deliver data-driven insights and actionable strategies."
+                      },
+                      "display": "block",
+                      "editable": true
+                    }
+                  ],
+                  "type": "brik",
+                  "style": {
+                    "font": {
+                      "size": "",
+                      "color": "",
+                      "style": "",
+                      "family": "",
+                      "weight": ""
+                    },
+                    "color": "",
+                    "backgroundColor": ""
+                  },
+                  "brikId": "@apf/resume-header-pro",
+                  "version": "1.0.0",
+                  "brikName": "Header",
+                  "editable": true,
+                  "editorId": "1727248050976"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

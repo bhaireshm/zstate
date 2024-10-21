@@ -1,10 +1,12 @@
 {
   "name": "@bhaireshm/zstate",
   "version": "0.0.1",
-  "description": "",
-  "main": "dist/index.js",
+  "description": "A state management library using XState",
+  "main": "dist/publish.js",
   "scripts": {
-    "dev": "nodemon src/test.ts"
+    "dev": "nodemon src/test.ts",
+    "build": "rm -rf dist && tsc",
+    "test": "node dist/test.js"
   },
   "keywords": [],
   "author": "Bhairesh M <bhairesh@arithaconsulting.com>",
