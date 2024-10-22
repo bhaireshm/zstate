@@ -9,8 +9,18 @@
     "test": "node dist/test.js",
     "prepublishOnly": "pnpm build"
   },
-  "keywords": [],
+  "keywords": [
+    "state management",
+    "crud",
+    "versioning",
+    "xstate",
+    "zstate"
+  ],
   "author": "Bhairesh M <bhairesh@arithaconsulting.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhaireshm/zstate.git"
+  },
   "license": "ISC",
   "dependencies": {
     "xstate": "^5.18.2"
