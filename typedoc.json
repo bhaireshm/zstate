@@ -1,0 +1,9 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "githubPages": true,
+  "name": "@bhaireshm/zstate",
+  "out": "docs",
+  "sort": ["kind", "alphabetical"],
+  "tsconfig": "./tsconfig.json",
+  "entryPoints": ["./src/publish.ts"]
+}
